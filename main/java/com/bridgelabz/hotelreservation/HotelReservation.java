@@ -1,12 +1,19 @@
 package com.bridgelabz.hotelreservation;
 
-import java.util.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 
 
 public class HotelReservation
 {
     ArrayList<Hotel> hotelList=new ArrayList<Hotel>();
+    ArrayList<Hotel> hotelList1=new ArrayList<Hotel>();
 
     public boolean addHotel(String hotelName,int rates, int rating)
     {
@@ -21,32 +28,54 @@ public class HotelReservation
             return true;
         }
     }
-    public boolean addHotel(String name, Double rates)
+
+
+
+
+    public boolean findCheapestHotel(String date11,String date22)
     {
-        Hotel hotel = new Hotel(name, rates);
-        hotelList.add(hotel);
-        return !hotelList.isEmpty();
+        try
+        {
+            DateFormat format =new SimpleDateFormat("dd mm yyyy");
+            Date date1 = format.parse(date11);
+            Date date2 = format.parse(date22);
+            long daysBetween= ChronoUnit.DAYS.between(date1,date2);
+            getTotalRateForDays(daysBetween);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    void getTotalRateForDays(long DaysBetween)
+    {
+        try
+        {
+            for(int i = 0; i < hotelList.size(); i++)
+            {
+                long totalAmountForstayingDates = DaysBetween * hotelList.get(i).rates;
+                System.out.println(hotelList.get(i).hotelName + "==> " + totalAmountForstayingDates );
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("Error");
+        }
     }
 
-    public String findCheapestHotel(Date [] dates)
+    public boolean addHotelWeekendWeekDay(String hotelName,String weekday, String weekend)
     {
-        ArrayList<Double> cheapRateHotels = new ArrayList<>();
-        for (Hotel hotel : hotelList)
+        Hotel hotel=new Hotel(hotelName,weekday,weekend);
+        hotelList1.add(hotel);
+
+        if(hotelList1.isEmpty())
         {
-            Double rate = 0.0;
-            for ( Date date : dates)
-            {
-                rate = hotel.getRate();
-            }
-            cheapRateHotels.add(rate);
+            return false;
         }
-        Double cheap = cheapRateHotels.stream().min(Comparator.comparing(Double::doubleValue)).orElse(null);
-        int index = cheapRateHotels.indexOf(cheap);
-        return hotelList.get(index).getName();
-    }
-    public boolean addHotelRates(String name, double weekday, double weekend ) {
-        Hotel hotel = new Hotel(name, weekday, weekend);
-        hotelList.add(hotel);
-        return !hotelList.isEmpty();
+        else
+        {
+            return true;
+        }
     }
 }
