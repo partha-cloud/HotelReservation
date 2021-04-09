@@ -1,11 +1,5 @@
 package com.bridgelabz.hotelreservation;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
 public class HotelReservation {
     ArrayList<Hotel> hotelList=new ArrayList<Hotel>();
@@ -23,5 +17,28 @@ public class HotelReservation {
         {
             return true;
         }
+    }
+    public boolean addHotel(String name, Double rates)
+    {
+        Hotel hotel = new Hotel(name, rates);
+        hotelList.add(hotel);
+        return !hotelList.isEmpty();
+    }
+
+    public String findCheapestHotel(Date [] dates)
+    {
+        ArrayList<Double> cheapRateHotels = new ArrayList<>();
+        for (Hotel hotel : hotelList)
+        {
+            Double rate = 0.0;
+            for ( Date date : dates)
+            {
+                rate = hotel.getRate();
+            }
+            cheapRateHotels.add(rate);
+        }
+        Double cheap = cheapRateHotels.stream().min(Comparator.comparing(Double::doubleValue)).orElse(null);
+        int index = cheapRateHotels.indexOf(cheap);
+        return hotelList.get(index).getName();
     }
 }
